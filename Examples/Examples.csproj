@@ -48,6 +48,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Keys\privateKey.asc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Keys\publicKey.asc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utility.PGPSignatureTools\Utility.PGPSignatureTools.csproj">
+      <Project>{3d60ee4b-3d87-4ae1-8761-72f6df5ca577}</Project>
+      <Name>Utility.PGPSignatureTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
