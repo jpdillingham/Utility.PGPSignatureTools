@@ -3,11 +3,18 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/bkwapclp6uvn2889?svg=true)](https://ci.appveyor.com/project/jpdillingham/utility-pgpsignaturetools)
 [![Build Status](https://travis-ci.org/jpdillingham/Utility.PGPSignatureTools.svg?branch=master)](https://travis-ci.org/jpdillingham/Utility.PGPSignatureTools)
 [![codecov](https://codecov.io/gh/jpdillingham/Utility.PGPSignatureTools/branch/master/graph/badge.svg)](https://codecov.io/gh/jpdillingham/Utility.PGPSignatureTools)
+[![NuGet version](https://img.shields.io/nuget/v/Utility.PGPSignatureTools.svg)](https://www.nuget.org/packages/Utility.PGPSignatureTools/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/jpdillingham/Utility.PGPSignatureTools/blob/master/LICENSE)
 
 ## Why?
 
 I needed a quick and easy way to digitally sign and validate files and couldn't find a good way to do it that didn't require a Software Signing X509 Certificate (not free).
+
+## Installation
+
+Install from the NuGet gallery GUI or with the Package Manager Console using the following command:
+
+```Install-Package Utility.PGPSignatureTools```
 
 ## How to Get a PGP Key
 
