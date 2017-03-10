@@ -73,6 +73,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Keys\privateKey.asc" />
+    <None Include="Keys\publicKey.asc" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>
