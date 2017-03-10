@@ -1,0 +1,11 @@
+version: 1.0.0.{build}
+before_build:
+- cmd: nuget restore
+build:
+  project: Utility.PGPSignatureTools.sln
+  verbosity: minimal
+test_script:
+- .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"C:\projects\Utility-PGPSignatureTools\Utility.PGPSignatureTools.Tests\bin\Debug\Utility.PGPSignatureTools.Tests.dll -noshadow -appveyor" -returntargetcode -filter:"+[Utility.PGPSignatureTools*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\Utility.PGPSignatureTools_coverage.xml
+- "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+- pip install codecov
+- codecov -f "Utility.PGPSignatureTools_coverage.xml"

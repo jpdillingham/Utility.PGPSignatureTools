@@ -11,7 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Exampl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6626EB0-2E16-4086-947F-735EC8296AAC}"
 	ProjectSection(SolutionItems) = preProject
-		..\Utility.OperationResult\appveyor.yml = ..\Utility.OperationResult\appveyor.yml
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
