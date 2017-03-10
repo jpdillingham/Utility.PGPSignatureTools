@@ -153,6 +153,30 @@ namespace Utility.PGPSignatureTools.Tests
         }
 
         /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a null private key.
+        /// </summary>
+        [Fact]
+        public void SignNullKey()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Sign(new byte[0], null, Password));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpKeyValidationException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a null password.
+        /// </summary>
+        [Fact]
+        public void SignNullPassword()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Sign(new byte[0], privateKey, null));
+
+            Assert.NotNull(ex);
+            Assert.IsType<NullReferenceException>(ex);
+        }
+
+        /// <summary>
         ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a zero-length byte array.
         /// </summary>
         [Fact]
