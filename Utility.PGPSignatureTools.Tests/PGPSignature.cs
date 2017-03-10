@@ -76,7 +76,7 @@ namespace Utility.PGPSignatureTools.Tests
         /// <summary>
         ///     The contents of the private and public key files.
         /// </summary>
-        private string privateKey, publicKey, newPublicKey;
+        private string privateKey, publicKey, newPublicKey, nullString;
 
         #endregion Private Fields
 
@@ -207,6 +207,18 @@ namespace Utility.PGPSignatureTools.Tests
         public void VerifyBadSignature()
         {
             Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Verify(new byte[0], publicKey));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpDataValidationException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(byte[], string)"/> method with null strings.
+        /// </summary>
+        [Fact]
+        public void VerifyNulls()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Verify(nullString, null));
 
             Assert.NotNull(ex);
             Assert.IsType<PgpDataValidationException>(ex);
