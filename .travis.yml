@@ -4,4 +4,4 @@ install:
   - nuget restore Utility.PGPSignatureTools.sln
 script:
   - xbuild /p:Configuration=Release Utility.PGPSignatureTools.sln
-  - mono ./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe ./Utility.PGPSignatureTools.Tests/bin/Release/Utility.PGPSignatureTools.Tests.dll
+  - mono ./packages/xunit.runner.console.2.2.0/tools/xunit.console.exe ./Utility.PGPSignatureTools.Tests/bin/Release/Utility.PGPSignatureTools.Tests.dll
