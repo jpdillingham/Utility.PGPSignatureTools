@@ -54,6 +54,7 @@
     <None Include="Keys\publicKey.asc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Settings.StyleCop" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility.PGPSignatureTools\Utility.PGPSignatureTools.csproj">

@@ -23,7 +23,7 @@ namespace Utility.PGPSignatureTools.Examples
         /// <summary>
         ///     Runs the example.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">Command line arguments.</param>
         private static void Main(string[] args)
         {
             string text = "hello world!";

@@ -6,6 +6,9 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace Utility.PGPSignatureTools
 {
+    /// <summary>
+    ///     Provides methods used to sign and verify payloads using PGP public/private key encryption.
+    /// </summary>
     public static class PGPSignature
     {
         #region Public Methods
@@ -105,8 +108,8 @@ namespace Utility.PGPSignatureTools
         public static byte[] Verify(string input, string publicKey)
         {
             // create input streams from
-            Stream inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input ?? ""));
-            Stream publicKeyStream = new MemoryStream(Encoding.UTF8.GetBytes(publicKey ?? ""));
+            Stream inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input ?? string.Empty));
+            Stream publicKeyStream = new MemoryStream(Encoding.UTF8.GetBytes(publicKey ?? string.Empty));
 
             // enclose all operations in a try/catch. if we encounter any exceptions verification fails.
             try
@@ -197,7 +200,7 @@ namespace Utility.PGPSignatureTools
         /// <returns>The retrieved PGP secret key.</returns>
         internal static PgpSecretKey ReadSecretKeyFromString(string key)
         {
-            return ReadSecretKey(new MemoryStream(Encoding.UTF8.GetBytes(key ?? "")));
+            return ReadSecretKey(new MemoryStream(Encoding.UTF8.GetBytes(key ?? string.Empty)));
         }
 
         #endregion Internal Methods
