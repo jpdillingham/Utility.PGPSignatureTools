@@ -53,8 +53,10 @@
                                                                                                  ▀████▀
                                                                                                    ▀▀                            */
 
+using System;
 using System.IO;
 using System.Text;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using Xunit;
 
 namespace Utility.PGPSignatureTools.Tests
@@ -64,10 +66,35 @@ namespace Utility.PGPSignatureTools.Tests
     /// </summary>
     public class PGPSignature
     {
+        #region Private Fields
+
         /// <summary>
         ///     The password for the private key file.
         /// </summary>
         private const string Password = "8&$gy$8rrPO^tbE1m5";
+
+        /// <summary>
+        ///     The contents of the private and public key files.
+        /// </summary>
+        private string privateKey, publicKey, newPublicKey;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PGPSignature"/> class.
+        /// </summary>
+        public PGPSignature()
+        {
+            privateKey = File.ReadAllText(Path.Combine("Keys", "privateKey.asc"));
+            publicKey = File.ReadAllText(Path.Combine("Keys", "publicKey.asc"));
+            newPublicKey = File.ReadAllText(Path.Combine("Keys", "newPublicKey.asc"));
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         /// <summary>
         ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method.
@@ -78,9 +105,176 @@ namespace Utility.PGPSignatureTools.Tests
             string text = "hello world!";
 
             byte[] bytes = Encoding.ASCII.GetBytes(text);
-            byte[] signature = PGPSignatureTools.PGPSignature.Sign(bytes, File.ReadAllText(Path.Combine("Keys", "privateKey.asc")), Password);
+            byte[] signatureBytes = PGPSignatureTools.PGPSignature.Sign(bytes, privateKey, Password);
+
+            string signature = Encoding.ASCII.GetString(signatureBytes);
+
+            Assert.NotNull(signature);
+            Assert.NotEqual(string.Empty, signature);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a blank string in
+        ///     place of the password.
+        /// </summary>
+        /// <remarks>Assumes that the password is not an empty string.</remarks>
+        [Fact]
+        public void SignBadPassword()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Sign(new byte[0], privateKey, string.Empty));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a blank string in
+        ///     place of the private key.
+        /// </summary>
+        [Fact]
+        public void SignBlankKey()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Sign(new byte[0], string.Empty, Password));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpKeyValidationException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with null bytes.
+        /// </summary>
+        [Fact]
+        public void SignNullBytes()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Sign(null, privateKey, Password));
+
+            Assert.NotNull(ex);
+            Assert.IsType<NullReferenceException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Sign(byte[], string, string)"/> method with a zero-length byte array.
+        /// </summary>
+        [Fact]
+        public void SignZeroBytes()
+        {
+            byte[] signature = PGPSignatureTools.PGPSignature.Sign(new byte[0], privateKey, Password);
 
             Assert.NotNull(Encoding.ASCII.GetString(signature));
         }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(byte[], string)"/> method.
+        /// </summary>
+        [Fact]
+        public void Verify()
+        {
+            string text = "hello world!";
+            byte[] signature = GetSignature(text);
+
+            Assert.NotNull(signature);
+            Assert.NotEqual(0, signature.Length);
+
+            byte[] message = PGPSignatureTools.PGPSignature.Verify(signature, publicKey);
+
+            Assert.NotNull(message);
+            Assert.NotEqual(0, message.Length);
+            Assert.Equal(text, Encoding.ASCII.GetString(message));
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(byte[], string)"/> method with a known bad PGP public key.
+        /// </summary>
+        [Fact]
+        public void VerifyBadKey()
+        {
+            string text = "hello world!";
+            byte[] signature = GetSignature(text);
+
+            Assert.NotNull(signature);
+            Assert.NotEqual(0, signature.Length);
+
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Verify(signature, string.Empty));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpDataValidationException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(byte[], string)"/> method with a known bad PGP signature.
+        /// </summary>
+        [Fact]
+        public void VerifyBadSignature()
+        {
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Verify(new byte[0], publicKey));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpDataValidationException>(ex);
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(string, string)"/> method.
+        /// </summary>
+        [Fact]
+        public void VerifyString()
+        {
+            string text = "hello again world!";
+            string signature = GetSignatureString(text);
+
+            Assert.NotNull(signature);
+            Assert.NotEqual(string.Empty, signature);
+
+            byte[] message = PGPSignatureTools.PGPSignature.Verify(signature, publicKey);
+
+            Assert.NotNull(message);
+            Assert.NotEqual(0, message.Length);
+            Assert.Equal(text, Encoding.ASCII.GetString(message));
+        }
+
+        /// <summary>
+        ///     Tests the <see cref="PGPSignatureTools.PGPSignature.Verify(byte[], string)"/> method with a valid PGP public key
+        ///     that does not match the private key which was used to generate the signature.
+        /// </summary>
+        [Fact]
+        public void VerifyWrongKey()
+        {
+            string text = "hello world!";
+            byte[] signature = GetSignature(text);
+
+            Assert.NotNull(signature);
+            Assert.NotEqual(0, signature.Length);
+
+            Exception ex = Record.Exception(() => PGPSignatureTools.PGPSignature.Verify(signature, newPublicKey));
+
+            Assert.NotNull(ex);
+            Assert.IsType<PgpDataValidationException>(ex);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        /// <summary>
+        ///     Returns a PGP signature of the specified text using the default private key.
+        /// </summary>
+        /// <param name="text">The text for which the signature will be generated.</param>
+        /// <returns>The generated PGP signature.</returns>
+        private byte[] GetSignature(string text)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(text);
+            return PGPSignatureTools.PGPSignature.Sign(bytes, privateKey, Password);
+        }
+
+        /// <summary>
+        ///     Returns a PGP signature, in the form of a string, of the specified text using the default private key.
+        /// </summary>
+        /// <param name="text">The text for which the signature will be generated.</param>
+        /// <returns>The generated PGP signature, in the form of a string.</returns>
+        private string GetSignatureString(string text)
+        {
+            return Encoding.ASCII.GetString(GetSignature(text));
+        }
+
+        #endregion Private Methods
     }
 }

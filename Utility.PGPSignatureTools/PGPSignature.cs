@@ -50,6 +50,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Org.BouncyCastle.Bcpg;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -226,21 +227,25 @@ namespace Utility.PGPSignatureTools
         /// <returns>The retrieved PGP secret key.</returns>
         private static PgpSecretKey ReadSecretKey(Stream input)
         {
-            PgpSecretKeyRingBundle pgpSec = new PgpSecretKeyRingBundle(PgpUtilities.GetDecoderStream(input));
-
-            // return the first signing key found in the key ring bundle.
-            foreach (PgpSecretKeyRing keyRing in pgpSec.GetKeyRings())
+            try
             {
-                foreach (PgpSecretKey key in keyRing.GetSecretKeys())
+                PgpSecretKeyRingBundle pgpSec = new PgpSecretKeyRingBundle(PgpUtilities.GetDecoderStream(input));
+                PgpSecretKeyRing pgpKeyRing = pgpSec.GetKeyRings().OfType<PgpSecretKeyRing>().FirstOrDefault();
+                PgpSecretKey pgpSecretKey = pgpKeyRing.GetSecretKeys().OfType<PgpSecretKey>().FirstOrDefault();
+
+                if (pgpSecretKey.IsSigningKey)
                 {
-                    if (key.IsSigningKey)
-                    {
-                        return key;
-                    }
+                    return pgpSecretKey;
+                }
+                else
+                {
+                    throw new Exception();
                 }
             }
-
-            throw new ArgumentException("Can't find signing key in key ring.");
+            catch (Exception)
+            {
+                throw new PgpKeyValidationException("Can't find a valid signing key in the specified key ring.");
+            }
         }
 
         /// <summary>
