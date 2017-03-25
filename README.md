@@ -27,7 +27,7 @@ to verify the ownership of the account against other social media accounts (Face
 Regardless of how you obtain your key, you'll need an ASCII-Armored (keybase default) Public and Private key file (extension .asc) to sign and verify payloads.  If you only 
 want to verify payloads signed by someone else, you'll just need to obtain the originator's public key.
 
-I've included examples of both [Public](https://raw.githubusercontent.com/jpdillingham/Utility.PGPSignatureTools/master/Examples/Keys/privateKey.asc) 
+I've included examples of both [Public](https://raw.githubusercontent.com/jpdillingham/Utility.PGPSignatureTools/master/Examples/Keys/publicKey.asc) 
 and [Private](https://raw.githubusercontent.com/jpdillingham/Utility.PGPSignatureTools/master/Examples/Keys/privateKey.asc) keys in this 
 repository for use as an example.  Note that these keys originated from my keybase account but have since been revoked 
 and re-generated with a new password.
