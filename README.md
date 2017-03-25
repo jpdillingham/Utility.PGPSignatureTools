@@ -8,7 +8,10 @@
 
 ## Why?
 
-I needed a quick and easy way to digitally sign and validate files and couldn't find a good way to do it that didn't require a Software Signing X509 Certificate (not free).
+I needed a quick and easy way to digitally sign and validate files and couldn't find a good way to do it that didn't require a (non-free) X.509 certificate.  
+
+PGP is, by name, "pretty good", and by leveraging [keybase.io](http://keybase.io) as a makeshift CA (Certificate Authority), payloads signed with a keybase 
+PGP key can be validated and, with a little leg work, verified against the owner's keybase account.
 
 ## Installation
 
