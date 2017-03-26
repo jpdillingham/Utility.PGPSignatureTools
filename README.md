@@ -6,6 +6,8 @@
 [![NuGet version](https://img.shields.io/nuget/v/Utility.PGPSignatureTools.svg)](https://www.nuget.org/packages/Utility.PGPSignatureTools/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/jpdillingham/Utility.PGPSignatureTools/blob/master/LICENSE)
 
+A C# Class Library for signing and verifying data using PGP encryption.
+
 ## Why?
 
 I needed a quick and easy way to digitally sign and validate files and couldn't find a good way to do it that didn't require a (non-free) X.509 certificate.  
