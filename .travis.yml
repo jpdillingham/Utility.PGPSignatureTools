@@ -1,6 +1,5 @@
 os:
   - linux
-  - osx
 language: csharp
 solution: Utility.PGPSignatureTools.sln
 install:
